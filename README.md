@@ -43,11 +43,11 @@ Apply Compute Budget instructions into `apps/web`
 ## Reference: for Superteam APU Workshop
 
 Addresses
-- SPL - Dhhuntngi4avDYGCpMeBThyA3rxTm5renL3CRoyez6Ed
-- Program - heSW1T3o1uybBomHbB862vEYChcRtM8842ihpc2BDT1
-- Program State - 3E7N9XJoYqHvGNB3WmcEwgib9a31kXZmbwPCfi2nfnnG
-- Program Token Vault - J5iXWpPZSWHutp2M4J5VsevA8nZyc2rAnv2rPsmLWMpJ
-- Lookup table - 4nfwLzfogkq5uhStJgpJRLsyLr9sn4EK7FJPVt9hvJRd
+- SPL - 2kWHF9xq2ScP2aUcDLnVMQdoqCWdroBx6oGtjYrgrLwz
+- Program - Dhhuntngi4avDYGCpMeBThyA3rxTm5renL3CRoyez6Ed
+- Program State - CngD7sWiZTzxZhZSVio5dN3fUXMuPRpG1qVU2XPADPEH
+- Presale Token Account - 33ynJnxGca9d7BNL3nbiiP3MoKyJshKLSTFrQgCqfJ3Y
+- Lookup table - 
 
 ## If deploying your own program
 

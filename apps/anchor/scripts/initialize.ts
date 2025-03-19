@@ -1,8 +1,8 @@
 import { Program, AnchorProvider, setProvider, web3, BN } from "@coral-xyz/anchor";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { MockPresale } from "../target/types/mock_presale";
 import IDL from "../target/idl/mock_presale.json";
+import { MockPresale } from "../target/types/mock_presale";
 import dotenv from "dotenv";
 
 dotenv.config();
