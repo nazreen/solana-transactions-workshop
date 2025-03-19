@@ -77,7 +77,7 @@ pub mod mock_presale {
         let state_seeds: &[&[u8]] = &[&b"state"[..], &[ctx.bumps.program_state][..]];
         let signer = &[&state_seeds[..]];
         
-        token_interface::transfer_checked(cpi_context.with_signer(signer), token_amount, 9)?;
+        token_interface::transfer_checked(cpi_context.with_signer(signer), token_amount.checked_mul(10u64.pow(9)).ok_or(ProgramError::ArithmeticOverflow)?, 9)?;
         msg!("Purchased {} tokens for {} SOL", token_amount, sol_required);
         Ok(())
     }
