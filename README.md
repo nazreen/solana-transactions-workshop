@@ -1,7 +1,18 @@
 # Solana Transaction Landing Optimisation
 
-## How to use this repo
+## Requirements
 
+- NodeJs
+- pnpm
+
+If deploying your own program (not needed for workshop)
+- Rust
+- Solana CLI
+- Anchor
+
+Refer to https://solana.com/docs/intro/installation
+
+## How to use this repo
 
 ### Install dependencies
 

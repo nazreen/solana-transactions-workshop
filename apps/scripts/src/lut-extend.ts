@@ -11,6 +11,17 @@ import { getKeypairFromFile } from "@solana-developers/helpers";
 import { printExplorerUrl } from "./utils";
 import { VAULT_TOKEN_ACCOUNT, LUT_ADDRESS, MINT_ADDRESS, TO_TOKEN_ACCOUNT, PROGRAM_VAULT_ACCOUNT, PROGRAM_ID } from "./config";
 
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Extend the lookup table with the given addresses.
+ *
+ * @remarks
+ * This function creates the extend lookup table instruction and sends it to the network.
+ * The instruction adds the given addresses to the lookup table.
+ *
+ * @param addresses The addresses to add to the lookup table.
+ */
+/******  4910608b-dd74-4e13-b4fd-485627af6151  *******/
 async function main() {
     // connection
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
