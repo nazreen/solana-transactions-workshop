@@ -279,7 +279,7 @@ export type MockPresale = {
       ],
       "args": [
         {
-          "name": "amount",
+          "name": "tokenAmount",
           "type": "u64"
         }
       ]

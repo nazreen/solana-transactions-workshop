@@ -64,6 +64,8 @@ function Contents() {
   const [programStatePDA, setProgramStatePDA] = useState<string | undefined>();
   const [tokenVaultPDA, setTokenVaultPDA] = useState<string | undefined>();
   const [rate, setRate] = useState<number | null>(null);
+  const [limit, setLimit] = useState<number | null>(null);
+  const [solCost, setSolCost] = useState<number | null>(null);
   const [tokensToReceive, setTokensToReceive] = useState<number | null>(null);
   const wallet = useAnchorWallet();
 
@@ -81,8 +83,7 @@ function Contents() {
   }, [publicKey, connection]);
 
   // Don't change anything here
-  // Define purchase amount: 0.001 SOL = 1_000_000 lamports
-  const amount = new BN(100);
+  const tokenAmount = useMemo(() => new BN(1000), []); // amount of tokens to purchase
 
   // Don't change anything here
   // Build txn link
@@ -132,9 +133,11 @@ function Contents() {
       setProgramStatePDA(foundProgramStatePDA.toBase58());
       setTokenVaultPDA(foundTokenVaultPDA.toBase58());
       setRate(stateAccount.tokensToSolRate.toNumber());
-      setTokensToReceive((amount.toNumber() / LAMPORTS_PER_SOL) * stateAccount.tokensToSolRate.toNumber());
+      setLimit(stateAccount.limitPerPurchase.toNumber());
+      setTokensToReceive(tokenAmount.toNumber());
+      setSolCost((tokenAmount.toNumber() * LAMPORTS_PER_SOL) / stateAccount.tokensToSolRate.toNumber());
     })();
-  }, [program, amount]);
+  }, [program, tokenAmount]);
 
 
   /* TASK GUIDE 
@@ -170,7 +173,7 @@ function Contents() {
     // hint: you might need to change from using rpc() to transaction()
     program
       .methods
-      .purchase(amount)
+      .purchase(tokenAmount)
       .accounts({
         // @ts-expect-error TS complains about programState even though it's in the IDL. Anchor issue perhaps.
         programState: programStatePDA,
@@ -196,9 +199,6 @@ function Contents() {
 
   } // end of handleOnClick
 
-
-  const amountInSOL = amount.toNumber() / LAMPORTS_PER_SOL;
-
   // Don't change anything here
   return (
     <div style={{ paddingTop: "1rem" }}>
@@ -207,12 +207,15 @@ function Contents() {
       <p>Program State PDA: {programStatePDA}</p>
       <p>Presale Token Account: {tokenVaultPDA}</p>
       { rate && <p>Tokens to SOL rate: {rate} ( 1 token = { 1 / rate } SOL )</p> } 
+      { limit && <p>Limit per purchase: { limit / LAMPORTS_PER_SOL } tokens</p> }
       <br />
       <p>Wallet address: {publicKey?.toBase58()}</p>
       <p>Wallet Balance: {balance} SOL</p>
       <br />
       <p>Limit per purchase: 1000 tokens</p>
-      <button style={{ padding: 10 }} onClick={handleOnClick}>Purchase { tokensToReceive } tokens for { amountInSOL } SOL</button>
+      <button style={{ padding: 10 }} onClick={handleOnClick}>
+        Purchase {tokensToReceive} tokens for {solCost} SOL
+      </button>
       {appState === APP_STATE.LOADING && <p>loading...</p>}
       {appState === APP_STATE.ERROR && <p style={{ color: "red" }}>{errorMessage}</p>}
       {appState === APP_STATE.SUCCESS && <p><a href={txnLink} target="_blank" rel="noopener noreferrer">{txnLink}</a></p>}

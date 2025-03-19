@@ -273,7 +273,7 @@
       ],
       "args": [
         {
-          "name": "amount",
+          "name": "token_amount",
           "type": "u64"
         }
       ]

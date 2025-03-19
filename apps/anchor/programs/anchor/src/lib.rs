@@ -33,26 +33,26 @@ pub mod mock_presale {
         Ok(())
     }
     
-    pub fn purchase(ctx: Context<Purchase>, amount: u64) -> Result<()> {
+    pub fn purchase(ctx: Context<Purchase>, token_amount: u64) -> Result<()> {
         let program_state = &ctx.accounts.program_state;
         
-        // Calculate tokens to send based on rate
-        let tokens_to_transfer = amount
-            .checked_mul(program_state.tokens_to_sol_rate)
+        // Calculate SOL amount based on token amount
+        let sol_required = token_amount
+            .checked_mul(10u64.pow(9)) // Convert to lamports
             .ok_or(ProgramError::ArithmeticOverflow)?
-            .checked_div(10u64.pow(9)) // asuming decinals is 9
+            .checked_div(program_state.tokens_to_sol_rate)
             .ok_or(ProgramError::ArithmeticOverflow)?;
-
-        // limit how many tokens can be purchased at one time
-        if tokens_to_transfer > 1000 {
+    
+        // Ensure the user does not exceed the purchase limit
+        if token_amount > program_state.limit_per_purchase {
             return Err(ErrorCode::ExceedsMaxPurchase.into());
         }
         
-        // Transfer SOL to the program_state (which is a PDA)
+        // Transfer SOL from buyer to program_state (PDA)
         let sol_transfer_ix = anchor_lang::solana_program::system_instruction::transfer(
             &ctx.accounts.buyer.key(),
             &ctx.accounts.program_state.key(),
-            amount,
+            sol_required, // Now correctly using SOL amount
         );
         anchor_lang::solana_program::program::invoke(
             &sol_transfer_ix,
@@ -63,6 +63,7 @@ pub mod mock_presale {
             ],
         )?;
         
+        // Transfer the purchased tokens to the buyer
         let cpi_accounts = TransferChecked {
             mint: ctx.accounts.token_mint.to_account_info(),
             from: ctx.accounts.token_vault.to_account_info(),
@@ -76,8 +77,8 @@ pub mod mock_presale {
         let state_seeds: &[&[u8]] = &[&b"state"[..], &[ctx.bumps.program_state][..]];
         let signer = &[&state_seeds[..]];
         
-        token_interface::transfer_checked(cpi_context.with_signer(signer), tokens_to_transfer, 9)?;
-        msg!("Purchased {} tokens for {} SOL", tokens_to_transfer, amount);
+        token_interface::transfer_checked(cpi_context.with_signer(signer), token_amount, 9)?;
+        msg!("Purchased {} tokens for {} SOL", token_amount, sol_required);
         Ok(())
     }
     
