@@ -9,7 +9,15 @@ import {
 } from "@solana/web3.js";
 import { getKeypairFromFile } from "@solana-developers/helpers";
 import { printExplorerUrl } from "./utils";
-import { VAULT_TOKEN_ACCOUNT, LUT_ADDRESS, MINT_ADDRESS, TO_TOKEN_ACCOUNT, PROGRAM_VAULT_ACCOUNT, PROGRAM_ID } from "./config";
+import { AnchorProvider, Program, setProvider, web3 } from "@coral-xyz/anchor";
+import IDL from "../../anchor/target/idl/mock_presale.json";
+import { MockPresale } from "../../anchor/target/types/mock_presale";
+
+import { LUT_ADDRESS} from "./config";
+
+import dotenv from "dotenv";
+
+dotenv.config();
 
 /**
  * Extend the lookup table with the given addresses.
@@ -23,15 +31,34 @@ import { VAULT_TOKEN_ACCOUNT, LUT_ADDRESS, MINT_ADDRESS, TO_TOKEN_ACCOUNT, PROGR
 async function main() {
     // connection
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+    const provider = AnchorProvider.env();
+    setProvider(provider);
+    // Load the program
+    const program = new Program<MockPresale>(
+        IDL,
+        provider
+    );
+
+    const tokenMint = new web3.PublicKey("2kWHF9xq2ScP2aUcDLnVMQdoqCWdroBx6oGtjYrgrLwz");
+
+    const [programStatePDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("state")],
+        program.programId
+      );
+
+    const [programTokenAccount] = PublicKey.findProgramAddressSync(
+        [Buffer.from("token-vault"), tokenMint.toBuffer()],
+        program.programId
+    );
 
     const fromKeypair = await getKeypairFromFile();
 
     const feePayer: Keypair = fromKeypair;
 
     const addresses = [
-        new PublicKey(MINT_ADDRESS),
-        new PublicKey(PROGRAM_VAULT_ACCOUNT),
-        new PublicKey(VAULT_TOKEN_ACCOUNT),
+        tokenMint,
+        programStatePDA,
+        programTokenAccount,
     ];
 
     // Create the lookup table creation instruction and retrieve its address
