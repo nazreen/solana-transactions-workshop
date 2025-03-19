@@ -9,15 +9,19 @@ import {
   // WalletDisconnectButton,
   WalletModalProvider,
 } from "@solana/wallet-adapter-react-ui";
-import { clusterApiUrl, ComputeBudgetProgram, LAMPORTS_PER_SOL, PublicKey, SystemProgram, TransactionInstruction } from "@solana/web3.js";
+import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey, SystemProgram } from "@solana/web3.js";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import dynamic from 'next/dynamic';
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { AnchorProvider, Program, setProvider } from "@coral-xyz/anchor";
+import { AnchorProvider, BN, Program, setProvider, web3 } from "@coral-xyz/anchor";
 import idl from './mock_presale.json'
 import type { MockPresale } from './mock_presale';
-import { getSimulationComputeUnits, getTotalAccountDataSize } from "./utils";
-import { getSetLoadedAccountsDataSizeLimitInstruction } from "@solana-program/compute-budget";
+import { set } from "@coral-xyz/anchor/dist/cjs/utils/features";
+
+/* TASK GUIDE 
+ * Ensure you import what's necessary to set Compute Budget instructions
+ */
 
 // needed due to hydration error
 const WalletMultiButtonDynamic = dynamic(
@@ -33,7 +37,6 @@ export default function Home() {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect={true}>
         <WalletModalProvider>
-          <h1 style={{ fontSize: "1.5rem" }}>Workshop: Landing Solana Transactions</h1>
           <WalletMultiButtonDynamic />
           <Contents />
         </WalletModalProvider>
@@ -42,14 +45,33 @@ export default function Home() {
   );
 }
 
+enum APP_STATE {
+  INITIAL,
+  LOADING,
+  SUCCESS,
+  ERROR,
+}
+
 function Contents() {
+  // Don't change anything
+  const [appState, setAppState] = useState(APP_STATE.INITIAL);
+  const [errorMessage, setErrorMessage] = useState("");
   const { publicKey } = useWallet();
   const { connection } = useConnection();
   const [balance, setBalance] = useState(0);
   const [txnHash, setTxnHash] = useState("");
+  const [program, setProgram] = useState<Program<MockPresale>>();
+  const [programStatePDA, setProgramStatePDA] = useState<string | undefined>();
+  const [tokenVaultPDA, setTokenVaultPDA] = useState<string | undefined>();
+
 
   const wallet = useAnchorWallet();
 
+  // Don't change anything here
+  // Define purchase amount: 0.001 SOL = 1_000_000 lamports
+  const amount = new BN(1_000_000);
+
+  // Don't change anything here
   const txnLink = useMemo(() => {
     if (txnHash === "sending...") {
       return txnHash;
@@ -60,85 +82,102 @@ function Contents() {
   }, [txnHash]);
 
 
-  async function handleOnClick() {
-
+  // Don't change anything here
+  useEffect(() => {
     if (wallet) {
       const provider = new AnchorProvider(connection, wallet, {});
       setProvider(provider);
-      const program = new Program<MockPresale>(idl, provider);
-      setTxnHash("sending...");
-
-      if (program.methods.initialize === undefined) {
-        return console.error("Program not initialized");
-      }
-
-      const cuPriceIxn = ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: 10_000 // TODO: show alternative by using 3rd party API
-      });
-
-      const cuLimitIxnMock = ComputeBudgetProgram.setComputeUnitLimit({
-        units: 10_000
-      });
-
-      const totalAccountDataSizes = await getTotalAccountDataSize(connection, [
-        SystemProgram.programId,
-        ComputeBudgetProgram.programId,
-        program.programId
-      ])
-
-      const setLoadedAccountsDataSizeLimitIxnV2 = getSetLoadedAccountsDataSizeLimitInstruction({
-          accountDataSizeLimit: totalAccountDataSizes + 23 // why 23??
-      })
-
-
-      // convert into v1 instruction
-      const setLoadedAccountsDataSizeLimitIxn = new TransactionInstruction({
-          keys: [],
-          data: Buffer.from(setLoadedAccountsDataSizeLimitIxnV2.data),
-          programId: new PublicKey(setLoadedAccountsDataSizeLimitIxnV2.programAddress)
-      })
-
-      // this is used only for simulation
-      const initializeTxn = await program.methods.initialize().transaction()
-
-      const simulationCu = await getSimulationComputeUnits(connection,
-        [
-          // @ts-expect-error type complains because getSimulationComputeUnits expects a @solana/web3.js txn but we are passing an anchor txn, but they will work at runtime.
-          initializeTxn,
-          cuLimitIxnMock,
-          cuPriceIxn,
-          setLoadedAccountsDataSizeLimitIxn
-        ],
-        wallet.publicKey, []);
-
-      if (simulationCu === null) {
-        console.error("Could not get simulation compute units");
-        return;
-      }
-
-      console.log({ simulationCu, totalAccountDataSizes })
-
-      const cuLimitIxn = ComputeBudgetProgram.setComputeUnitLimit({
-        units: simulationCu
-      });
-
-      program
-        .methods
-        .initialize()
-        .preInstructions([
-          cuLimitIxn,
-          cuPriceIxn,
-          setLoadedAccountsDataSizeLimitIxn
-        ]).rpc()
-        .then(setTxnHash);
-
-    } else {
-      console.log("Wallet not connected");
+      setProgram(new Program<MockPresale>(idl, provider));
     }
 
-  }
+  }, [connection, wallet]);
+
+  // Don't change anything here
+  useEffect(() => {
+    if (!program) return;
+
+    (async () => {
+      // Find program state PDA
+      const [foundProgramStatePDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("state")],
+        program.programId
+      );
+
+      // Fetch the program state account
+      const stateAccount = await program.account.programState.fetch(foundProgramStatePDA);
+      const tokenMint = stateAccount.tokenMint as PublicKey;
+
+      // Find token vault PDA
+      const [foundTokenVaultPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("token-vault"), tokenMint.toBuffer()],
+        program.programId
+      );
+
+      setProgramStatePDA(foundProgramStatePDA.toBase58());
+      setTokenVaultPDA(foundTokenVaultPDA.toBase58());
+    })();
+  }, [program]);
 
 
+  /* TASK GUIDE 
+   * Add the necessary instructions to optimise the purchase transaction
+   */
+  async function handleOnClick() {
+
+    if (wallet === undefined) {
+      console.error("Wallet is undefined");
+      return
+    }
+
+    if (program === undefined) {
+      console.error("Program is undefined");
+      return
+    }
+
+    if (programStatePDA === undefined) {
+      console.error("Program State PDA is undefined");
+      return
+    }
+
+    setAppState(APP_STATE.LOADING);
+
+    const stateAccount = await program.account.programState.fetch(programStatePDA);
+    const tokenMint = stateAccount.tokenMint as PublicKey;
+
+    const buyerTokenAccount = await getAssociatedTokenAddress(
+      tokenMint,
+      wallet.publicKey
+    );
+
+    program
+      .methods
+      .purchase(amount)
+      .accounts({
+        programState: programStatePDA,
+        tokenVault: tokenVaultPDA,
+        tokenMint: tokenMint,
+        buyer: wallet.publicKey,
+        buyerTokenAccount: buyerTokenAccount,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
+        rent: web3.SYSVAR_RENT_PUBKEY,
+      })
+      .rpc()
+      .then((txnHash) => {
+        setTxnHash(txnHash);
+        setAppState(APP_STATE.SUCCESS);
+      })
+      .catch((e) => {
+        console.error(e);
+        setErrorMessage(e.message);
+        setAppState(APP_STATE.ERROR);
+      })
+
+  } // end of handleOnClick
+
+
+  // Don't change anything here
   // get wallet balance
   useEffect(() => {
     if (!connection || !publicKey) {
@@ -151,12 +190,21 @@ function Contents() {
     }
   }, [publicKey, connection]);
 
+  // Don't change anything here
   return (
     <div style={{ paddingTop: "1rem" }}>
+      <h1 style={{ fontSize: "1.5rem" }}>Workshop: Landing Solana Transactions</h1>
+      <p>Mock Presale Program Address: {program?.programId?.toBase58()}</p>
+      <p>Program State PDA: {programStatePDA}</p>
+      <p>Token Vault PDA: {tokenVaultPDA}</p>
+      <br />
       <p>Wallet address: {publicKey?.toBase58()}</p>
-      <p>Balance: {balance} SOL</p>
-      <button style={{ padding: 10 }} onClick={handleOnClick}>Call Initialize</button>
-      <p>{txnHash && <a href={txnLink} target="_blank" rel="noopener noreferrer">{txnLink}</a>}</p>
+      <p>Wallet Balance: {balance} SOL</p>
+      <br />
+      <button style={{ padding: 10 }} onClick={handleOnClick}>Call Purchase</button>
+      {appState === APP_STATE.LOADING && <p>loading...</p>}
+      {appState === APP_STATE.ERROR && <p style={{ color: "red" }}>{errorMessage}</p>}
+      {appState === APP_STATE.SUCCESS && <p><a href={txnLink} target="_blank" rel="noopener noreferrer">{txnLink}</a></p>}
     </div>
   );
 }

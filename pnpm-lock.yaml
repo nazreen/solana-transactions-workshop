@@ -94,6 +94,9 @@ importers:
       '@solana-program/compute-budget':
         specifier: ^0.7.0
         version: 0.7.0(@solana/kit@2.1.0)
+      '@solana/spl-token':
+        specifier: ^0.4.13
+        version: 0.4.13(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.2)
       '@solana/wallet-adapter-base':
         specifier: ^0.9.23
         version: 0.9.23(@solana/web3.js@1.98.0)
