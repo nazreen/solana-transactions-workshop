@@ -28,3 +28,15 @@ For your reference, you can view the anchor program in `apps/anchor`. If you're 
 ### Apply Optimisation
 
 Apply Compute Budget instructions into `apps/web`
+
+
+## Reference
+
+### Only for Superteam APU Workshop
+
+Addresses
+- SPL - 2kWHF9xq2ScP2aUcDLnVMQdoqCWdroBx6oGtjYrgrLwz
+- Program - heSW1T3o1uybBomHbB862vEYChcRtM8842ihpc2BDT1
+- Program State - 3E7N9XJoYqHvGNB3WmcEwgib9a31kXZmbwPCfi2nfnnG
+- Program Token Vault - J5iXWpPZSWHutp2M4J5VsevA8nZyc2rAnv2rPsmLWMpJ
+- Lookup table - 4nfwLzfogkq5uhStJgpJRLsyLr9sn4EK7FJPVt9hvJRd
