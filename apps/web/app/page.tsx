@@ -63,15 +63,29 @@ function Contents() {
   const [program, setProgram] = useState<Program<MockPresale>>();
   const [programStatePDA, setProgramStatePDA] = useState<string | undefined>();
   const [tokenVaultPDA, setTokenVaultPDA] = useState<string | undefined>();
-
+  const [rate, setRate] = useState<number | null>(null);
 
   const wallet = useAnchorWallet();
+
+    // Don't change anything here
+  // get wallet balance
+  useEffect(() => {
+    if (!connection || !publicKey) {
+      return;
+    }
+    if (publicKey) {
+      connection.getBalance(publicKey).then((balance) => {
+        setBalance(balance / LAMPORTS_PER_SOL);
+      });
+    }
+  }, [publicKey, connection]);
 
   // Don't change anything here
   // Define purchase amount: 0.001 SOL = 1_000_000 lamports
   const amount = new BN(1_000_000);
 
   // Don't change anything here
+  // Build txn link
   const txnLink = useMemo(() => {
     if (txnHash === "sending...") {
       return txnHash;
@@ -83,6 +97,7 @@ function Contents() {
 
 
   // Don't change anything here
+  // Instantiate the program
   useEffect(() => {
     if (wallet) {
       const provider = new AnchorProvider(connection, wallet, {});
@@ -93,6 +108,7 @@ function Contents() {
   }, [connection, wallet]);
 
   // Don't change anything here
+  // get relevant addresses and exchange rate
   useEffect(() => {
     if (!program) return;
 
@@ -115,6 +131,7 @@ function Contents() {
 
       setProgramStatePDA(foundProgramStatePDA.toBase58());
       setTokenVaultPDA(foundTokenVaultPDA.toBase58());
+      setRate(stateAccount.tokensToSolRate.toNumber());
     })();
   }, [program]);
 
@@ -153,6 +170,7 @@ function Contents() {
       .methods
       .purchase(amount)
       .accounts({
+        // @ts-expect-error TS complains about programState even though it's in the IDL. Anchor issue perhaps.
         programState: programStatePDA,
         tokenVault: tokenVaultPDA,
         tokenMint: tokenMint,
@@ -176,20 +194,6 @@ function Contents() {
 
   } // end of handleOnClick
 
-
-  // Don't change anything here
-  // get wallet balance
-  useEffect(() => {
-    if (!connection || !publicKey) {
-      return;
-    }
-    if (publicKey) {
-      connection.getBalance(publicKey).then((balance) => {
-        setBalance(balance / LAMPORTS_PER_SOL);
-      });
-    }
-  }, [publicKey, connection]);
-
   // Don't change anything here
   return (
     <div style={{ paddingTop: "1rem" }}>
@@ -197,6 +201,7 @@ function Contents() {
       <p>Mock Presale Program Address: {program?.programId?.toBase58()}</p>
       <p>Program State PDA: {programStatePDA}</p>
       <p>Token Vault PDA: {tokenVaultPDA}</p>
+      { rate && <p>Tokens to SOL rate: {rate} ( 1 token = { 1 / rate } SOL )</p> } 
       <br />
       <p>Wallet address: {publicKey?.toBase58()}</p>
       <p>Wallet Balance: {balance} SOL</p>
