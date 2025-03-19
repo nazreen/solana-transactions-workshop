@@ -34,7 +34,7 @@ async function main() {
     const setLoadedAccountsDataSizeLimitIxnV2 = getSetLoadedAccountsDataSizeLimitInstruction({
         accountDataSizeLimit: SYSTEM_PROGRAM_SIZE + COMPUTE_BUDGET_PROGRAM_SIZE, // 14 + 22 = 36
         // note that the above won't actually help us save CUs, as it's too small to make a difference
-    })
+    }) // anyways, only multiples of 32KB matter
 
     // convert into v1 instruction
     const setLoadedAccountsDataSizeLimitIxn = new TransactionInstruction({

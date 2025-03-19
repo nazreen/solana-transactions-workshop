@@ -100,7 +100,7 @@ async function main() {
 
     const setLoadedAccountsDataSizeLimitIxnV2 = getSetLoadedAccountsDataSizeLimitInstruction({
         accountDataSizeLimit: SYSTEM_PROGRAM_SIZE + COMPUTE_BUDGET_PROGRAM_SIZE + SPL_TOKEN_PROGRAM_SIZE + SPL_MINT_ACCOUNT_SIZE + ( 2 * SPL_TOKEN_ACCOUNT_SIZE ) + 11 // why 11?
-    })
+    }) // anyways, only multiples of 32KB matter
 
 
     // convert into v1 instruction
