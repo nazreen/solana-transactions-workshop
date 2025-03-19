@@ -17,10 +17,10 @@ import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapte
 import { AnchorProvider, BN, Program, setProvider, web3 } from "@coral-xyz/anchor";
 import idl from './mock_presale.json'
 import type { MockPresale } from './mock_presale';
-import { set } from "@coral-xyz/anchor/dist/cjs/utils/features";
 
-/* TASK GUIDE 
- * Ensure you import what's necessary to set Compute Budget instructions
+/* TASK GUIDE
+ * You only need to modify 2 parts of this file: imports and handleOnClick
+ * Do not modify anything else
  */
 
 // needed due to hydration error
