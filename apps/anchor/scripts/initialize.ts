@@ -38,12 +38,12 @@ async function main() {
   
   // Set tokens to SOL rate (10,000)
   const tokensToSolRate = new BN(10_000);
-  const limitPerPurchase = new BN()
+  const limitPerPurchase = new BN(10)
   
   try {
     console.log("Initializing vault...");
     const tx = await program.methods
-      .initialize(tokensToSolRate)
+      .initialize(tokensToSolRate, limitPerPurchase)
       .accounts({
         // @ts-expect-error TS complains about programState even though it's already in the IDL. anchor error perhaps.
         programState: programStatePDA,

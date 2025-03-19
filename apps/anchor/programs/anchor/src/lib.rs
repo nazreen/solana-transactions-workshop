@@ -38,7 +38,8 @@ pub mod mock_presale {
         
         // Calculate tokens to send based on rate
         let tokens_to_transfer = amount
-            .checked_mul(program_state.tokens_to_sol_rate)?
+            .checked_mul(program_state.tokens_to_sol_rate)
+            .ok_or(ProgramError::ArithmeticOverflow)?
             .checked_div(10u64.pow(9)) // asuming decinals is 9
             .ok_or(ProgramError::ArithmeticOverflow)?;
 
