@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-mock_presale = "heSW1T3o1uybBomHbB862vEYChcRtM8842ihpc2BDT1"
+mock_presale = "Dhhuntngi4avDYGCpMeBThyA3rxTm5renL3CRoyez6Ed"
 
 [registry]
 url = "https://api.apr.dev"

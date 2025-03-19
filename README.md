@@ -40,13 +40,27 @@ For your reference, you can view the anchor program in `apps/anchor`. If you're 
 Apply Compute Budget instructions into `apps/web`
 
 
-## Reference
-
-### Only for Superteam APU Workshop
+## Reference: for Superteam APU Workshop
 
 Addresses
-- SPL - 2kWHF9xq2ScP2aUcDLnVMQdoqCWdroBx6oGtjYrgrLwz
+- SPL - Dhhuntngi4avDYGCpMeBThyA3rxTm5renL3CRoyez6Ed
 - Program - heSW1T3o1uybBomHbB862vEYChcRtM8842ihpc2BDT1
 - Program State - 3E7N9XJoYqHvGNB3WmcEwgib9a31kXZmbwPCfi2nfnnG
 - Program Token Vault - J5iXWpPZSWHutp2M4J5VsevA8nZyc2rAnv2rPsmLWMpJ
 - Lookup table - 4nfwLzfogkq5uhStJgpJRLsyLr9sn4EK7FJPVt9hvJRd
+
+## If deploying your own program
+
+build
+
+```bash
+anchor build
+```
+
+deploy using
+
+```
+solana program deploy target/deploy/mock_presale.so
+```
+
+(using `anchor deploy` or `anchor upgrade` somehow results in a Buffer account data size error)

@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/mock_presale.json`.
  */
 export type MockPresale = {
-  "address": "heSW1T3o1uybBomHbB862vEYChcRtM8842ihpc2BDT1",
+  "address": "Dhhuntngi4avDYGCpMeBThyA3rxTm5renL3CRoyez6Ed",
   "metadata": {
     "name": "mockPresale",
     "version": "0.1.0",
@@ -95,6 +95,10 @@ export type MockPresale = {
       "args": [
         {
           "name": "tokensToSolRate",
+          "type": "u64"
+        },
+        {
+          "name": "limitPerPurchase",
           "type": "u64"
         }
       ]
@@ -430,6 +434,10 @@ export type MockPresale = {
           },
           {
             "name": "tokensToSolRate",
+            "type": "u64"
+          },
+          {
+            "name": "limitPerPurchase",
             "type": "u64"
           }
         ]

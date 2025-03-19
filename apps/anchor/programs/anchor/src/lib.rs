@@ -2,17 +2,18 @@ use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{self, Mint, TokenInterface, TokenAccount, TransferChecked};
 use anchor_spl::associated_token::AssociatedToken;
 
-declare_id!("heSW1T3o1uybBomHbB862vEYChcRtM8842ihpc2BDT1");
+declare_id!("Dhhuntngi4avDYGCpMeBThyA3rxTm5renL3CRoyez6Ed");
 
 #[program]
 pub mod mock_presale {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, tokens_to_sol_rate: u64) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>, tokens_to_sol_rate: u64, limit_per_purchase: u64) -> Result<()> {
         let program_state = &mut ctx.accounts.program_state;
         program_state.authority = ctx.accounts.authority.key();
         program_state.token_mint = ctx.accounts.token_mint.key();
         program_state.tokens_to_sol_rate = tokens_to_sol_rate;
+        program_state.limit_per_purchase = limit_per_purchase;
         
         // Create vault PDA with a unique seed for the token vault
         let (vault_pda, _bump) = Pubkey::find_program_address(
@@ -21,7 +22,7 @@ pub mod mock_presale {
         );
         program_state.token_vault = vault_pda;
         
-        msg!("Vault initialized with rate: {} tokens per SOL", tokens_to_sol_rate);
+        msg!("Vault initialized with rate: {} tokens per SOL and limit {} tokens per purchase", tokens_to_sol_rate, limit_per_purchase);
         Ok(())
     }
     
@@ -36,7 +37,9 @@ pub mod mock_presale {
         let program_state = &ctx.accounts.program_state;
         
         // Calculate tokens to send based on rate
-        let tokens_to_transfer = amount.checked_mul(program_state.tokens_to_sol_rate)
+        let tokens_to_transfer = amount
+            .checked_mul(program_state.tokens_to_sol_rate)?
+            .checked_div(10u64.pow(9)) // asuming decinals is 9
             .ok_or(ProgramError::ArithmeticOverflow)?;
 
         // limit how many tokens can be purchased at one time
@@ -185,14 +188,15 @@ pub struct WithdrawSol<'info> {
 
 #[account]
 pub struct ProgramState {
-    pub authority: Pubkey,
-    pub token_mint: Pubkey,
-    pub token_vault: Pubkey,
-    pub tokens_to_sol_rate: u64,
+    pub authority: Pubkey, // 32
+    pub token_mint: Pubkey, // 32
+    pub token_vault: Pubkey, // 32
+    pub tokens_to_sol_rate: u64, // 8
+    pub limit_per_purchase: u64, // 8
 }
 
 impl ProgramState {
-    pub const SIZE: usize = 32 + 32 + 32 + 8;
+    pub const SIZE: usize = 32 + 32 + 32 + 8 + 8; // authority + 
 }
 
 #[error_code]

@@ -15,6 +15,8 @@ import { getKeypairFromFile } from "@solana-developers/helpers";
 import { DECIMALS, MINT_ADDRESS } from "./config";
 import { printExplorerUrl } from "./utils";
 
+// mints to the token vault
+
 async function main() {
     // connection
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
