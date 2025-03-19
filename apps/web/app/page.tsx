@@ -15,8 +15,8 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 import dynamic from 'next/dynamic';
 import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { AnchorProvider, BN, Program, setProvider, web3 } from "@coral-xyz/anchor";
-import idl from './mock_presale.json'
-import type { MockPresale } from './mock_presale';
+import idl from '../../anchor/target/idl/mock_presale.json'
+import type { MockPresale } from '../../anchor/target/types/mock_presale';
 
 /* TASK GUIDE
  * You only need to modify 2 parts of this file: imports and handleOnClick
@@ -82,7 +82,7 @@ function Contents() {
 
   // Don't change anything here
   // Define purchase amount: 0.001 SOL = 1_000_000 lamports
-  const amount = new BN(1_000_000);
+  const amount = new BN(100);
 
   // Don't change anything here
   // Build txn link

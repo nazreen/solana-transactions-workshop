@@ -14,6 +14,16 @@ Refer to https://solana.com/docs/intro/installation
 
 ## How to use this repo
 
+
+### Ensure you have Phantom wallet and devnet SOL in it
+
+If not, install Phantom wallet and get devnet SOL.
+For devnet SOL, either use the official Solana faucet or using the Solana CLI, run `solana airdrop 5`.
+
+### Ensure you have a local Solana wallet on your machine
+
+If not, set it up: https://solana.com/docs/intro/installation#create-wallet
+
 ### Install dependencies
 
 ```bash
@@ -21,7 +31,7 @@ pnpm install
 ```
 
 ### Reference
-Refer to examples in `apps/script` to see how Compute Budget instructions are set.
+Refer to examples in `apps/script` to see how Compute Budget instructions are set. Note that currently examples under `apps/script` requires you to have a keypair at the default path of `~/.config/id.json`
 
 For your reference, you can view the anchor program in `apps/anchor`. If you're participating in the workshop, there's no need for you to deploy the program. You can use the instructor's deployed program ID.
 

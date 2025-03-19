@@ -14,6 +14,9 @@ import { getSetLoadedAccountsDataSizeLimitInstruction } from "@solana-program/co
 import { getKeypairFromFile, getSimulationComputeUnits } from "@solana-developers/helpers";
 import { COMPUTE_BUDGET_PROGRAM_SIZE, printExplorerUrl, SYSTEM_PROGRAM_SIZE } from "./utils";
 
+
+// solana-keygen new
+
 async function main() {
     const fromKeypair = await getKeypairFromFile();
     console.log(`Using keypair with public key: ${fromKeypair.publicKey.toBase58()}`);
