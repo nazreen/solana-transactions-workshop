@@ -64,7 +64,7 @@ function Contents() {
   const [programStatePDA, setProgramStatePDA] = useState<string | undefined>();
   const [tokenVaultPDA, setTokenVaultPDA] = useState<string | undefined>();
   const [rate, setRate] = useState<number | null>(null);
-
+  const [tokensToReceive, setTokensToReceive] = useState<number | null>(null);
   const wallet = useAnchorWallet();
 
     // Don't change anything here
@@ -132,8 +132,9 @@ function Contents() {
       setProgramStatePDA(foundProgramStatePDA.toBase58());
       setTokenVaultPDA(foundTokenVaultPDA.toBase58());
       setRate(stateAccount.tokensToSolRate.toNumber());
+      setTokensToReceive((amount.toNumber() / LAMPORTS_PER_SOL) * stateAccount.tokensToSolRate.toNumber());
     })();
-  }, [program]);
+  }, [program, amount]);
 
 
   /* TASK GUIDE 
@@ -194,6 +195,9 @@ function Contents() {
 
   } // end of handleOnClick
 
+
+  const amountInSOL = amount.toNumber() / LAMPORTS_PER_SOL;
+
   // Don't change anything here
   return (
     <div style={{ paddingTop: "1rem" }}>
@@ -206,7 +210,7 @@ function Contents() {
       <p>Wallet address: {publicKey?.toBase58()}</p>
       <p>Wallet Balance: {balance} SOL</p>
       <br />
-      <button style={{ padding: 10 }} onClick={handleOnClick}>Call Purchase</button>
+      <button style={{ padding: 10 }} onClick={handleOnClick}>Purchase { tokensToReceive } tokens for { amountInSOL } SOL</button>
       {appState === APP_STATE.LOADING && <p>loading...</p>}
       {appState === APP_STATE.ERROR && <p style={{ color: "red" }}>{errorMessage}</p>}
       {appState === APP_STATE.SUCCESS && <p><a href={txnLink} target="_blank" rel="noopener noreferrer">{txnLink}</a></p>}
