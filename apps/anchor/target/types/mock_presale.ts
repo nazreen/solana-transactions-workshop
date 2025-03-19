@@ -403,6 +403,11 @@ export type MockPresale = {
       "code": 6001,
       "name": "insufficientTokenBalance",
       "msg": "Insufficient token balance in vault"
+    },
+    {
+      "code": 6002,
+      "name": "exceedsMaxPurchase",
+      "msg": "Cannot purchase more than 1000 tokens in a single transaction"
     }
   ],
   "types": [

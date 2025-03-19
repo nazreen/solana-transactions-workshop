@@ -210,6 +210,7 @@ function Contents() {
       <p>Wallet address: {publicKey?.toBase58()}</p>
       <p>Wallet Balance: {balance} SOL</p>
       <br />
+      <p>Limit per purchase: 1000 tokens</p>
       <button style={{ padding: 10 }} onClick={handleOnClick}>Purchase { tokensToReceive } tokens for { amountInSOL } SOL</button>
       {appState === APP_STATE.LOADING && <p>loading...</p>}
       {appState === APP_STATE.ERROR && <p style={{ color: "red" }}>{errorMessage}</p>}

@@ -38,6 +38,11 @@ pub mod mock_presale {
         // Calculate tokens to send based on rate
         let tokens_to_transfer = amount.checked_mul(program_state.tokens_to_sol_rate)
             .ok_or(ProgramError::ArithmeticOverflow)?;
+
+        // limit how many tokens can be purchased at one time
+        if tokens_to_transfer > 1000 {
+            return Err(ErrorCode::ExceedsMaxPurchase.into());
+        }
         
         // Transfer SOL to the program_state (which is a PDA)
         let sol_transfer_ix = anchor_lang::solana_program::system_instruction::transfer(
@@ -196,4 +201,6 @@ pub enum ErrorCode {
     InsufficientBalance,
     #[msg("Insufficient token balance in vault")]
     InsufficientTokenBalance,
+    #[msg("Cannot purchase more than 1000 tokens in a single transaction")]
+    ExceedsMaxPurchase,
 }

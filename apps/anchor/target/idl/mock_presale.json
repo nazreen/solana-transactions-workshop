@@ -397,6 +397,11 @@
       "code": 6001,
       "name": "InsufficientTokenBalance",
       "msg": "Insufficient token balance in vault"
+    },
+    {
+      "code": 6002,
+      "name": "ExceedsMaxPurchase",
+      "msg": "Cannot purchase more than 1000 tokens in a single transaction"
     }
   ],
   "types": [
