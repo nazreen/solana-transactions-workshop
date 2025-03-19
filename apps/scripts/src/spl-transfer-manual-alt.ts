@@ -20,7 +20,7 @@ import {
     createTransferCheckedInstruction,
 } from "@solana/spl-token";
 import { getKeypairFromFile, getSimulationComputeUnits } from "@solana-developers/helpers";
-import { DECIMALS, LUT_ADDRESS, MINT_ADDRESS } from "./config";
+import { DECIMALS, MINT_ADDRESS } from "./config";
 import { COMPUTE_BUDGET_PROGRAM_SIZE, printExplorerUrl, SPL_MINT_ACCOUNT_SIZE, SPL_TOKEN_ACCOUNT_SIZE, SPL_TOKEN_PROGRAM_SIZE, SYSTEM_PROGRAM_SIZE } from "./utils";
 import bs58 from "bs58";
 import { getSetLoadedAccountsDataSizeLimitInstruction } from "@solana-program/compute-budget";
@@ -81,7 +81,7 @@ async function main() {
     }
 
     const lookupTableAccount = (
-        await connection.getAddressLookupTable(new PublicKey(LUT_ADDRESS))
+        await connection.getAddressLookupTable(new PublicKey("3FPEVAiUwKCnZrArn1br4Rpypyhvd2abpDoCK4MJ5uap"))
       ).value;
 
     if (lookupTableAccount === null) {

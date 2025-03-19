@@ -204,7 +204,7 @@ function Contents() {
       <h1 style={{ fontSize: "1.5rem" }}>Workshop: Landing Solana Transactions</h1>
       <p>Mock Presale Program Address: {program?.programId?.toBase58()}</p>
       <p>Program State PDA: {programStatePDA}</p>
-      <p>Token Vault PDA: {tokenVaultPDA}</p>
+      <p>Presale Token Account: {tokenVaultPDA}</p>
       { rate && <p>Tokens to SOL rate: {rate} ( 1 token = { 1 / rate } SOL )</p> } 
       <br />
       <p>Wallet address: {publicKey?.toBase58()}</p>

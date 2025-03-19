@@ -9,9 +9,7 @@ import {
 } from "@solana/web3.js";
 import { getKeypairFromFile } from "@solana-developers/helpers";
 import { printExplorerUrl } from "./utils";
-import { FROM_TOKEN_ACCOUNT, LUT_ADDRESS, MINT_ADDRESS, TO_TOKEN_ACCOUNT } from "./config";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { COMPUTE_BUDGET_PROGRAM_ADDRESS } from "@solana-program/compute-budget";
+import { VAULT_TOKEN_ACCOUNT, LUT_ADDRESS, MINT_ADDRESS, TO_TOKEN_ACCOUNT, PROGRAM_VAULT_ACCOUNT, PROGRAM_ID } from "./config";
 
 async function main() {
     // connection
@@ -22,9 +20,10 @@ async function main() {
     const feePayer: Keypair = fromKeypair;
 
     const addresses = [
+        new PublicKey(PROGRAM_ID),
         new PublicKey(MINT_ADDRESS),
-        new PublicKey(FROM_TOKEN_ACCOUNT),
-        new PublicKey(TO_TOKEN_ACCOUNT),
+        new PublicKey(PROGRAM_VAULT_ACCOUNT),
+        new PublicKey(VAULT_TOKEN_ACCOUNT),
     ];
 
     // Create the lookup table creation instruction and retrieve its address
