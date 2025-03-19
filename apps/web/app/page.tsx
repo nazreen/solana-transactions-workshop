@@ -167,6 +167,7 @@ function Contents() {
       wallet.publicKey
     );
 
+    // hint: you might need to change from using rpc() to transaction()
     program
       .methods
       .purchase(amount)
