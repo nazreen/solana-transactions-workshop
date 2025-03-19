@@ -83,7 +83,7 @@ function Contents() {
   }, [publicKey, connection]);
 
   // Don't change anything here
-  const tokenAmount = useMemo(() => new BN(1000), []); // amount of tokens to purchase
+  const tokenAmount = useMemo(() => new BN(1), []);
 
   // Don't change anything here
   // Build txn link
@@ -135,7 +135,7 @@ function Contents() {
       setRate(stateAccount.tokensToSolRate.toNumber());
       setLimit(stateAccount.limitPerPurchase.toNumber());
       setTokensToReceive(tokenAmount.toNumber());
-      setSolCost((tokenAmount.toNumber() * LAMPORTS_PER_SOL) / stateAccount.tokensToSolRate.toNumber());
+      setSolCost(tokenAmount.toNumber() / stateAccount.tokensToSolRate.toNumber());
     })();
   }, [program, tokenAmount]);
 
