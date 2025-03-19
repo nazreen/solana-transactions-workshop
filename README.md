@@ -47,7 +47,7 @@ Addresses
 - Program - Dhhuntngi4avDYGCpMeBThyA3rxTm5renL3CRoyez6Ed
 - Program State - CngD7sWiZTzxZhZSVio5dN3fUXMuPRpG1qVU2XPADPEH
 - Presale Token Account - 33ynJnxGca9d7BNL3nbiiP3MoKyJshKLSTFrQgCqfJ3Y
-- Lookup table - 
+- Lookup table - 9JVQY6uF9r13uUD8C4bYepiBP98c2VRs17d45kHJ9Goo (has: Mint Account, Program Token Account, Program State Account)
 
 ## If deploying your own program
 
