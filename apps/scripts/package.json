@@ -1,0 +1,30 @@
+{
+  "name": "solana-txns",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "spl:create": "tsx src/spl-create.ts",
+    "spl:mint": "tsx src/spl-mint.ts",
+    "spl:transfer": "tsx src/spl-transfer.ts",
+    "spl:transfer-manual": "tsx src/spl-transfer-manual.ts",
+    "spl:transfer-manual:alt": "tsx src/spl-transfer-manual-alt.ts",
+    "lut:create": "tsx src/lut-create.ts",
+    "lut:extend": "tsx src/lut-extend.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana-developers/helpers": "^2.8.0",
+    "@solana-program/compute-budget": "^0.7.0",
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3"
+  }
+}
