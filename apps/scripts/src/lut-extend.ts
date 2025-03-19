@@ -11,7 +11,6 @@ import { getKeypairFromFile } from "@solana-developers/helpers";
 import { printExplorerUrl } from "./utils";
 import { VAULT_TOKEN_ACCOUNT, LUT_ADDRESS, MINT_ADDRESS, TO_TOKEN_ACCOUNT, PROGRAM_VAULT_ACCOUNT, PROGRAM_ID } from "./config";
 
-/*************  ✨ Codeium Command ⭐  *************/
 /**
  * Extend the lookup table with the given addresses.
  *
@@ -21,7 +20,6 @@ import { VAULT_TOKEN_ACCOUNT, LUT_ADDRESS, MINT_ADDRESS, TO_TOKEN_ACCOUNT, PROGR
  *
  * @param addresses The addresses to add to the lookup table.
  */
-/******  4910608b-dd74-4e13-b4fd-485627af6151  *******/
 async function main() {
     // connection
     const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
@@ -31,7 +29,6 @@ async function main() {
     const feePayer: Keypair = fromKeypair;
 
     const addresses = [
-        new PublicKey(PROGRAM_ID),
         new PublicKey(MINT_ADDRESS),
         new PublicKey(PROGRAM_VAULT_ACCOUNT),
         new PublicKey(VAULT_TOKEN_ACCOUNT),
