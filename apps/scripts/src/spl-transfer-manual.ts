@@ -102,7 +102,7 @@ async function main() {
     })
 
     const cuPriceIxn = ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: 10_000 // TODO: show alternative by using 3rd party API
+        microLamports: 10_000 // alternative: use 3rd party API
     });
 
     const cuLimitIxnMock = ComputeBudgetProgram.setComputeUnitLimit({
