@@ -80,12 +80,15 @@ async function main() {
 
     console.log(`Transferring from token accounts: ${fromTokenAccountPubkey.toBase58()} to ${toTokenAccountPubkey.toBase58()}`);
 
+
+    const amount = 0.0001;
+
     const transferSplIxn = createTransferCheckedInstruction(
         fromTokenAccountPubkey, // from (should be a token account)
         mintPubkey, // mint
         toTokenAccountPubkey, // to (should be a token account)
         fromKeypair.publicKey, // from's owner
-        0.1 * 1e9, // amount, if your decimals is 8, send 10^8 for 1 token
+        amount * 1e9,
         DECIMALS, // decimals
     )
 

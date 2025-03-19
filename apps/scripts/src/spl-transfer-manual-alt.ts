@@ -89,12 +89,15 @@ async function main() {
         return;
     }
 
+
+    const amount = 0.0001;
+
     const transferSplIxn = createTransferCheckedInstruction(
         fromTokenAccountPubkey, // from (should be a token account)
         mintPubkey, // mint
         toTokenAccountPubkey, // to (should be a token account)
         fromKeypair.publicKey, // from's owner
-        0.1 * 1e9, // amount, if your decimals is 8, send 10^8 for 1 token
+        amount * 1e9, // amount, if your decimals is 8, send 10^8 for 1 token
         DECIMALS, // decimals
     )
 
@@ -135,18 +138,6 @@ async function main() {
     const cuLimitIxn = ComputeBudgetProgram.setComputeUnitLimit({
         units: simulationCu
     });
-
-    // let tx = new Transaction()
-    //     .add(transferSplIxn)
-    //     .add(cuLimitIxn)
-    //     .add(cuPriceIxn)
-    //     .add(setLoadedAccountsDataSizeLimitIxn);
-    // console.log(
-    //     `txhash: ${await sendAndConfirmTransaction(connection, tx, [
-    //         feePayer,
-    //         fromKeypair,
-    //     ])}`,
-    // );
 
     // get blockhash
     const { blockhash } = await connection.getLatestBlockhash();

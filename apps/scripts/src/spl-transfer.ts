@@ -70,6 +70,8 @@ async function main() {
         }
     }
 
+    const amount = 0.0001;
+
     let txhash = await transferChecked(
         connection, // connection
         feePayer, // fee payer
@@ -77,7 +79,7 @@ async function main() {
         mintPubkey, // mint
         toTokenAccountPubkey, // mint authority
         fromKeypair,
-        1 * 1e8, // amount. if your decimals are 8, you mint 10^8 for 1 token.
+        amount * 1e9,
         DECIMALS, // decimals
       );
       printExplorerUrl(txhash);
