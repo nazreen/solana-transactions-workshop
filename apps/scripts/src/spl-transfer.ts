@@ -72,6 +72,7 @@ async function main() {
 
     const amount = 0.0001;
 
+    // checked = checks decimals match
     let txhash = await transferChecked(
         connection, // connection
         feePayer, // fee payer
